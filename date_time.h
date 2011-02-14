@@ -256,14 +256,7 @@ namespace clx {
 		}
 		
 		basic_date_time& after(const time_duration& t) {
-			date_.tm_year += t.years();
-			date_.tm_mon  += t.months();
-			date_.tm_mday += t.days();
-			date_.tm_hour += t.hours();
-			date_.tm_min  += t.minutes();
-			date_.tm_sec += t.seconds();
-			
-			return this->assign(this->c_time());
+			return this->assign(c_time() + t.c_time());
 		}
 		
 		basic_date_time& before(value_type t) {
@@ -273,14 +266,9 @@ namespace clx {
 		}
 		
 		basic_date_time& before(const time_duration& t) {
-			date_.tm_year -= t.years();
-			date_.tm_mon  -= t.months();
-			date_.tm_mday -= t.days();
-			date_.tm_hour -= t.hours();
-			date_.tm_minuite -= t.minutes();
-			date_.tm_sec -= t.seconds();
+			clx_time_t tmp = this->c_time() - t.c_time();
 			
-			return this->assign(this->c_time());
+			return this->assign(tmp);
 		}
 		
 		double difference(const basic_date_time& t) const {

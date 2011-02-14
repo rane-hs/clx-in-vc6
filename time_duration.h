@@ -35,8 +35,6 @@
 #ifndef CLX_TIME_DURATION_H
 #define CLX_TIME_DURATION_H
 
-#include "unit.h"
-
 namespace clx {
 	
 	/* --------------------------------------------------------------------- */
@@ -47,13 +45,18 @@ namespace clx {
 		typedef int value_type;
 		
 		explicit time_duration(
-			const value_type y = 0, const value_type m = 0, const value_type d = 0,
-			const value_type h = 0, const value_type n = 0, const value_type s = 0) :
-			years_(y), months_(m), days_(d), hours_(h), minutes_(n), seconds_(s) {}
+			const value_type d,
+			const value_type h, const value_type n, const value_type s) :
+			days_(d), hours_(h), minutes_(n), seconds_(s) {}
+		explicit time_duration(const time_t &t = 0)
+		{
+			days_ = static_cast<value_type>(t/(60*60*24));
+			hours_ = static_cast<value_type>((t/(60*60))%24);
+			minutes_ = static_cast<value_type>((t/(60))%60);
+			seconds_ = static_cast<value_type>(t%60);
+		}
 		
 		time_duration& operator+=(const time_duration& t) {
-			years_ += t.years_;
-			months_ += t.months_;
 			days_ += t.days_;
 			hours_ += t.hours_;
 			minutes_ += t.minutes_;
@@ -62,32 +65,36 @@ namespace clx {
 		}
 		
 		time_duration& operator-=(const time_duration& t) {
-			years_ -= t.years_;
-			months_ -= t.months_;
 			days_ -= t.days_;
 			hours_ -= t.hours_;
 			minutes_ -= t.minutes_;
 			seconds_ -= t.seconds_;
 			return *this;
 		}
+
+		const time_t c_time() const
+		{
+			return (days() * 24 * 60 * 60) + 
+				(hours() * 60 * 60) + 
+				(minutes() * 60) + 
+				seconds() ;
+		}
 		
 		// binary operator
-		friend time_duration operator+(time_duration x, const time_duration& y) { return x += y; }
-		friend time_duration operator-(time_duration x, const time_duration& y) { return x -= y; }
-		friend time_duration operator+(const time_duration& y, time_duration x) { return x += y; }
-		friend time_duration operator-(const time_duration& y, time_duration x) { return x -= y; }
-		
+		friend time_duration operator+(const time_duration& x, const time_duration& y) {
+			return time_duration(x.days() + y.days(), x.hours() + y.hours(), x.minutes() + y.minutes(), x.seconds() + y.seconds());
+		}
+		friend time_duration operator-(const time_duration& x, const time_duration& y) { 
+			return time_duration(x.days() - y.days(), x.hours() - y.hours(), x.minutes() - y.minutes(), x.seconds() - y.seconds());
+		}
+
 		// accessor
-		const value_type years() const { return years_; }
-		const value_type months() const { return months_; }
 		const value_type days() const { return days_; }
 		const value_type hours() const { return hours_; }
 		const value_type minutes() const { return minutes_; }
 		const value_type seconds() const { return seconds_; }
 		
 	private:
-		value_type years_;
-		value_type months_;
 		value_type days_;
 		value_type hours_;
 		value_type minutes_;
@@ -97,12 +104,11 @@ namespace clx {
 	/* --------------------------------------------------------------------- */
 	//  time_unit helper func
 	/* --------------------------------------------------------------------- */
-	inline const time_duration years(int t)   { return time_duration(t); }
-	inline const time_duration months(int t)  { return time_duration(0, t); }
-	inline const time_duration days(int t)    { return time_duration(0, 0, t); }
-	inline const time_duration hours(int t)   { return time_duration(0, 0, 0, t); }
-	inline const time_duration minutes(int t) { return time_duration(0, 0, 0, 0, t); }
-	inline const time_duration seconds(int t) { return time_duration(0, 0, 0, 0, 0, t); }
+	inline const time_duration days(int t)    { return time_duration(t, 0, 0, 0); }
+	inline const time_duration hours(int t)   { return time_duration(0, t, 0, 0); }
+	inline const time_duration minutes(int t) { return time_duration(0, 0, t, 0); }
+	inline const time_duration seconds(int t) { return time_duration(0, 0, 0, t); }
+
 }
 
 #endif // CLX_TIME_DURATION_H
