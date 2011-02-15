@@ -147,9 +147,9 @@ namespace clx {
 		basic_date_time& operator-=(value_type t) { return this->before(t); }
 		basic_date_time& operator-=(const time_duration& t) { return this->before(t); }
 		
-		double operator-(const basic_date_time& t) const { return this->difference(t); }
-		double operator-(const clx_time_t& t) const { return this->difference(t); }
-		double operator-(const tm_type& t) const { return this->difference(t); }
+		time_duration operator-(const basic_date_time& t) const { return this->difference(t); }
+		time_duration operator-(const clx_time_t& t) const { return this->difference(t); }
+		time_duration operator-(const tm_type& t) const { return this->difference(t); }
 		
 		// binary operator
 		friend basic_date_time operator+(basic_date_time x, value_type y) { return x += y; }
@@ -271,21 +271,21 @@ namespace clx {
 			return this->assign(tmp);
 		}
 		
-		double difference(const basic_date_time& t) const {
-			return std::difftime(this->c_time(), t.c_time());
+		time_duration difference(const basic_date_time& t) const {
+			return time_duration(static_cast<time_t>(std::difftime(this->c_time(), t.c_time())));
 		}
 		
-		double difference(const clx_time_t& t) const {
-			return std::difftime(this->c_time(), t);
+		time_duration difference(const clx_time_t& t) const {
+			return time_duration(static_cast<time_t>(std::difftime(this->c_time(), t)));
 		}
 		
 #if defined(_MSC_VER) && (_MSC_VER >= 1300)
-		double difference(const std::tm& t) const {
+		time_duration difference(const std::tm& t) const {
 			clx_time_t tmp = std::mktime(const_cast<std::tm*>(&t));
-			return std::difftime(this->c_time(), tmp);
+			return time_duration(static_cast<time_t>(std::difftime(this->c_time(), tmp)));
 		}
 #else
-		double difference(const tm& t) const {
+		time_duration difference(const tm& t) const {
 			clx_time_t tmp = std::mktime(const_cast<tm*>(&t));
 			return std::difftime(this->c_time(), tmp);
 		}

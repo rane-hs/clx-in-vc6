@@ -29,7 +29,7 @@
  *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *  Last-modified: Thu 14 Jun 2007 14:38:02 JST
+ *  Last-modified: Tue 15 Feb 2011 11:30:02 JST
  */
 /* ------------------------------------------------------------------------- */
 #ifndef CLX_TIME_DURATION_H
@@ -47,28 +47,28 @@ namespace clx {
 		explicit time_duration(
 			const value_type d,
 			const value_type h, const value_type n, const value_type s) :
-			days_(d), hours_(h), minutes_(n), seconds_(s) {}
+			day_(d), hour_(h), minute_(n), second_(s) {}
 		explicit time_duration(const time_t &t = 0)
 		{
-			days_ = static_cast<value_type>(t/(60*60*24));
-			hours_ = static_cast<value_type>((t/(60*60))%24);
-			minutes_ = static_cast<value_type>((t/(60))%60);
-			seconds_ = static_cast<value_type>(t%60);
+			day_ = static_cast<value_type>(t/(60*60*24));
+			hour_ = static_cast<value_type>((t/(60*60))%24);
+			minute_ = static_cast<value_type>((t/(60))%60);
+			second_ = static_cast<value_type>(t%60);
 		}
 		
 		time_duration& operator+=(const time_duration& t) {
-			days_ += t.days_;
-			hours_ += t.hours_;
-			minutes_ += t.minutes_;
-			seconds_ += t.seconds_;
+			day_ += t.day_;
+			hour_ += t.hour_;
+			minute_ += t.minute_;
+			second_ += t.second_;
 			return *this;
 		}
 		
 		time_duration& operator-=(const time_duration& t) {
-			days_ -= t.days_;
-			hours_ -= t.hours_;
-			minutes_ -= t.minutes_;
-			seconds_ -= t.seconds_;
+			day_ -= t.day_;
+			hour_ -= t.hour_;
+			minute_ -= t.minute_;
+			second_ -= t.second_;
 			return *this;
 		}
 
@@ -89,16 +89,28 @@ namespace clx {
 		}
 
 		// accessor
-		const value_type days() const { return days_; }
-		const value_type hours() const { return hours_; }
-		const value_type minutes() const { return minutes_; }
-		const value_type seconds() const { return seconds_; }
+		const value_type days() const 
+		{ return day_ + (hour_/24) + (minute_ / (60*24)) + (second_/(60*60*24));
+		}
+		const value_type hours() const 
+		{ return (day_*24) + hour_ + (minute_ / 60) + (second_/(60*60));
+		}
+		const value_type minutes() const
+		{ return (day_*24*60) + (hour_*60) + minute_  + (second_/60);
+		}
+		const value_type seconds() const
+		{ return (day_*24*60*60) + (hour_*60*60) + (minute_*60)  + second_;
+		}
+		const value_type day() const { return day_; }
+		const value_type hour() const { return hour_; }
+		const value_type minute() const { return minute_; }
+		const value_type second() const { return second_; }
 		
 	private:
-		value_type days_;
-		value_type hours_;
-		value_type minutes_;
-		value_type seconds_;
+		value_type day_;
+		value_type hour_;
+		value_type minute_;
+		value_type second_;
 	};
 	
 	/* --------------------------------------------------------------------- */
