@@ -74,10 +74,7 @@ namespace clx {
 
 		const time_t c_time() const
 		{
-			return (days() * 24 * 60 * 60) + 
-				(hours() * 60 * 60) + 
-				(minutes() * 60) + 
-				seconds() ;
+			return seconds() ;
 		}
 		
 		// binary operator
