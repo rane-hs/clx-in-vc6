@@ -50,7 +50,7 @@ namespace clx {
 		return dest;
 	}
 #else
-	inline unsigned char* memcpy(unsigned char* dest, const unsigned char* src, int bytes) {
+	inline unsigned char* memcpy_(unsigned char* dest, const unsigned char* src, int bytes) {
 		std::memcpy(dest, src, bytes);
 		return dest;
 	}
@@ -60,7 +60,7 @@ namespace clx {
 	//  memcpy
 	/* --------------------------------------------------------------------- */
 	template <class Type>
-	inline unsigned char* memcpy(unsigned char* dest, const Type* src, int bytes) {
+	inline unsigned char* memcpy_(unsigned char* dest, const Type* src, int bytes) {
 		if (endian::is_little()) {
 			std::memcpy(dest, reinterpret_cast<const unsigned char*>(src), bytes);
 			return dest;
@@ -76,7 +76,7 @@ namespace clx {
 	}
 	
 	template <class Type>
-	inline char* memcpy(const char* dest, const Type* src, int bytes) {
+	inline char* memcpy_(const char* dest, const Type* src, int bytes) {
 		return memcpy(reinterpret_cast<unsigned char*>(dest), src, bytes);
 	}
 	
@@ -84,7 +84,7 @@ namespace clx {
 	//  memcpy
 	/* --------------------------------------------------------------------- */
 	template <class Type>
-	inline Type* memcpy(Type* dest, const unsigned char* src, int bytes) {
+	inline Type* memcpy_(Type* dest, const unsigned char* src, int bytes) {
 		if (endian::is_little()) {
 			std::memcpy(dest, reinterpret_cast<const unsigned char*>(src), bytes);
 			return dest;
@@ -99,7 +99,7 @@ namespace clx {
 	}
 	
 	template <class Type>
-	inline Type* memcpy(Type* dest, const char* src, int bytes) {
+	inline Type* memcpy_(Type* dest, const char* src, int bytes) {
 		return memcpy(dest, reinterpret_cast<const unsigned char*>(src), bytes);
 	}
 }

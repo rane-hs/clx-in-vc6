@@ -74,7 +74,7 @@ namespace clx {
 
 		const time_t c_time() const
 		{
-			return seconds() ;
+			return 	seconds() ;
 		}
 		
 		// binary operator

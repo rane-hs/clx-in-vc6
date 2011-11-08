@@ -205,6 +205,7 @@ namespace clx {
 		value_type minute() const { return date_.tm_min; }
 		value_type second() const { return date_.tm_sec; }
 		value_type totaldays() const { return date_.tm_yday; }
+		value_type weekday() const { return date_.tm_wday; }
 		
 		// get information as the traditional std::tm type
 		const tm_type& reference() const { return date_; }
