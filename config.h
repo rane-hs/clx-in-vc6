@@ -104,8 +104,12 @@
 
 //size_t definition
 namespace clx{
-#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+#if defined(_MSC_VER) 
+#	if (_MSC_VER <= 1200)
 	typedef size_t size_t;
+#	else
+	typedef size_t size_t;
+#	endif
 #else
 	typedef std::size_t size_t;
 #endif

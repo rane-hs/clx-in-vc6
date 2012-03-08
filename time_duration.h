@@ -79,10 +79,10 @@ namespace clx {
 		
 		// binary operator
 		friend time_duration operator+(const time_duration& x, const time_duration& y) {
-			return time_duration(x.days() + y.days(), x.hours() + y.hours(), x.minutes() + y.minutes(), x.seconds() + y.seconds());
+			return time_duration(x.day() + y.day(), x.hour() + y.hour(), x.minute() + y.minute(), x.second() + y.second());
 		}
 		friend time_duration operator-(const time_duration& x, const time_duration& y) { 
-			return time_duration(x.days() - y.days(), x.hours() - y.hours(), x.minutes() - y.minutes(), x.seconds() - y.seconds());
+			return time_duration(x.day() - y.day(), x.hour() - y.hour(), x.minute() - y.minute(), x.second() - y.second());
 		}
 
 		// accessor
@@ -118,6 +118,26 @@ namespace clx {
 	inline const time_duration minutes(int t) { return time_duration(0, 0, t, 0); }
 	inline const time_duration seconds(int t) { return time_duration(0, 0, 0, t); }
 
+	//check operators
+	bool const operator==(const time_duration& lhs, const time_duration& rhs) {
+		if(lhs.seconds() != rhs.seconds() ) return false;
+		return true;
+	}
+	bool const operator!=(const time_duration& lhs, const time_duration& rhs) {
+		return !(lhs == rhs);
+	}
+	bool const operator<(const time_duration& lhs, const time_duration& rhs) {
+		return lhs.seconds() < rhs.seconds();
+	}
+	bool const operator>(const time_duration& lhs, const time_duration& rhs) {
+		return lhs.seconds() > rhs.seconds();
+	}
+	bool const operator>=(const time_duration& lhs, const time_duration& rhs) {
+		return (lhs > rhs)? true : (lhs==rhs)?true:false;
+	}
+	bool const operator<=(const time_duration& lhs, const time_duration& rhs) {
+		return (lhs < rhs)? true : (lhs==rhs)?true:false;
+	}
 }
 
 #endif // CLX_TIME_DURATION_H
